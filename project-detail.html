@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Project detail gallery" />
+    <title>Project Detail</title>
+    <link rel="stylesheet" href="./pet-detail.css?v=0721-yinhe-city-smooth-wheel" />
+  </head>
+  <body>
+    <header class="detail-nav">
+      <a href="./index.html#archive" aria-label="Back to works">
+        <span aria-hidden="true">←</span>
+        Back to works
+      </a>
+      <p id="projectTitle">Project Detail</p>
+    </header>
+
+    <main class="project-gallery" id="projectGallery" aria-label="Project detail"></main>
+
+    <footer class="detail-footer">
+      <p>THANKS FOR WATCHING</p>
+      <a href="./index.html#archive">Back to works →</a>
+    </footer>
+
+    <script>
+      const projects = {
+        yangbo: { title: "\u592e\u535a\u6570\u5b57\u827a\u672f\u9986\u9879\u76ee", folder: "yangbo-detail" },
+        pet: { title: "\u72d7\u7cae\u54c1\u724c\u5305\u88c5", folder: "pet-detail" },
+        poster: { title: "\u5de5\u4f5c\u6d77\u62a5\u5408\u96c6", folder: "poster-detail" },
+        gdc: { title: "GDC\u8bbe\u8ba1\u56e2\u961fLOGO", folder: "GDC-detail" },
+        qingmeijiu: { title: "\u7eaf\u53d1\u9175\u9752\u6885\u9152\u5305\u88c5", folder: "qingmeijiu-detail" },
+        yinhe: { title: "\u94f6\u6cb3\u8bc1\u5238IP\u89c6\u89c9", folder: "yinhe ip-detail" },
+        chegai: { title: "\u5954\u817e\u5c0f\u9a6c\u6f6e\u6d41\u8f66\u6539", folder: "chegai -detail" },
+        "yinhe-city": {
+          title: "\u94f6\u6cb3\u8bc1\u5238IP\u57ce\u5e02\u7cfb\u5217",
+          folder: "yinhe ip2-detail",
+          layout: "drag-gallery",
+        },
+        aigc: { title: "AIGC\u5de5\u4f5c\u9879\u76ee", folder: "aigc-detail" },
+      };
+
+      const params = new URLSearchParams(window.location.search);
+      const projectKey = params.get("project") || "pet";
+      const fallbackProject = projects[projectKey] || projects.pet;
+      const gallery = document.querySelector("#projectGallery");
+      const title = document.querySelector("#projectTitle");
+
+      function encodePathSegment(value) {
+        return encodeURIComponent(value).replace(/%2F/g, "/");
+      }
+
+      function imageUrl(folder, file) {
+        const encodedFolder = folder.split("/").map(encodePathSegment).join("/");
+        return `./assets/${encodedFolder}/${encodePathSegment(file)}`;
+      }
+
+      const dragGalleryState = {
+        frame: 0,
+        isPointerDown: false,
+        lastX: 0,
+        lastY: 0,
+        lastTime: 0,
+        track: null,
+        trackWidth: 0,
+        trackHeight: 0,
+        periodX: 1,
+        periodY: 1,
+        lastFrameTime: 0,
+        x: 0,
+        y: 0,
+        vx: 0,
+        vy: 0,
+      };
+
+      function stopDragGallery() {
+        if (dragGalleryState.frame) {
+          cancelAnimationFrame(dragGalleryState.frame);
+          dragGalleryState.frame = 0;
+        }
+
+        dragGalleryState.isPointerDown = false;
+        dragGalleryState.track = null;
+      }
+
+      function wrapDragPosition() {
+        dragGalleryState.x =
+          ((dragGalleryState.x % dragGalleryState.periodX) + dragGalleryState.periodX) % dragGalleryState.periodX;
+        dragGalleryState.y =
+          ((dragGalleryState.y % dragGalleryState.periodY) + dragGalleryState.periodY) % dragGalleryState.periodY;
+      }
+
+      function applyDragTransform() {
+        if (!dragGalleryState.track) return;
+        dragGalleryState.track.style.transform = `translate3d(${dragGalleryState.x}px, ${dragGalleryState.y}px, 0)`;
+      }
+
+      function animateDragGallery() {
+        if (!dragGalleryState.track) return;
+
+        const now = performance.now();
+        const elapsed = dragGalleryState.lastFrameTime ? Math.min(34, now - dragGalleryState.lastFrameTime) : 16;
+        const step = elapsed / 16;
+        dragGalleryState.lastFrameTime = now;
+
+        if (!dragGalleryState.isPointerDown) {
+          dragGalleryState.x += dragGalleryState.vx * step;
+          dragGalleryState.y += dragGalleryState.vy * step;
+          dragGalleryState.vx *= Math.pow(0.9, step);
+          dragGalleryState.vy *= Math.pow(0.9, step);
+          wrapDragPosition();
+          applyDragTransform();
+        }
+
+        if (
+          dragGalleryState.isPointerDown ||
+          Math.abs(dragGalleryState.vx) > 0.04 ||
+          Math.abs(dragGalleryState.vy) > 0.04
+        ) {
+          dragGalleryState.frame = requestAnimationFrame(animateDragGallery);
+        } else {
+          dragGalleryState.frame = 0;
+        }
+      }
+
+      function startDragAnimation() {
+        if (!dragGalleryState.frame) {
+          dragGalleryState.lastFrameTime = performance.now();
+          dragGalleryState.frame = requestAnimationFrame(animateDragGallery);
+        }
+      }
+
+      function renderDragGallery(project) {
+        const track = document.createElement("div");
+        const isNarrow = window.matchMedia("(max-width: 720px)").matches;
+        const rowCount = isNarrow ? 6 : 8;
+        const cellWidth = isNarrow ? 172 : 268;
+        const cellHeight = isNarrow ? 164 : 214;
+        const itemWidth = isNarrow ? 132 : 172;
+        const edgePaddingX = isNarrow ? 40 : 80;
+        const edgePaddingY = isNarrow ? 34 : 54;
+        const minimumColumns = Math.ceil(gallery.clientWidth / cellWidth) + 3;
+        const columnCount = Math.max(Math.ceil(project.files.length / rowCount), minimumColumns);
+        const periodX = columnCount * cellWidth;
+        const periodY = rowCount * cellHeight;
+        const trackWidth = periodX * 3 + edgePaddingX * 2 + cellWidth * 0.5;
+        const trackHeight = periodY * 3 + edgePaddingY * 2;
+
+        stopDragGallery();
+        gallery.innerHTML = "";
+        track.className = "drag-gallery-track";
+        track.style.setProperty("--track-width", `${trackWidth}px`);
+        track.style.setProperty("--track-height", `${trackHeight}px`);
+
+        for (let repeatY = -1; repeatY <= 1; repeatY += 1) {
+          for (let repeatX = -1; repeatX <= 1; repeatX += 1) {
+            for (let column = 0; column < columnCount; column += 1) {
+              for (let row = 0; row < rowCount; row += 1) {
+                const sourceIndex = (column * rowCount + row) % project.files.length;
+                const file = project.files[sourceIndex];
+                const figure = document.createElement("figure");
+                const image = document.createElement("img");
+                const rowOffset = row % 2 === 0 ? 0 : cellWidth * 0.5;
+                const x =
+                  edgePaddingX +
+                  repeatX * periodX +
+                  column * cellWidth +
+                  rowOffset +
+                  (cellWidth - itemWidth) / 2;
+                const y = edgePaddingY + repeatY * periodY + row * cellHeight + (cellHeight - itemWidth) / 2;
+
+                figure.className = "drag-gallery-item";
+                figure.style.setProperty("--x", `${x}px`);
+                figure.style.setProperty("--y", `${y}px`);
+                figure.style.setProperty("--w", `${itemWidth}px`);
+
+                image.src = imageUrl(project.folder, file);
+                image.alt = `${project.title}\u5c55\u793a ${sourceIndex + 1}`;
+                image.draggable = false;
+                if (sourceIndex === 0 && repeatX === 0 && repeatY === 0) image.fetchPriority = "high";
+                if (sourceIndex > 5 || repeatX !== 0 || repeatY !== 0) image.loading = "lazy";
+
+                figure.appendChild(image);
+                track.appendChild(figure);
+              }
+            }
+          }
+        }
+
+        gallery.appendChild(track);
+
+        dragGalleryState.track = track;
+        dragGalleryState.trackWidth = trackWidth;
+        dragGalleryState.trackHeight = trackHeight;
+        dragGalleryState.periodX = periodX;
+        dragGalleryState.periodY = periodY;
+        dragGalleryState.x = periodX * 0.24;
+        dragGalleryState.y = periodY * 0.2;
+        dragGalleryState.vx = 0;
+        dragGalleryState.vy = 0;
+        dragGalleryState.lastFrameTime = 0;
+        applyDragTransform();
+
+        gallery.onpointerdown = (event) => {
+          if (event.button !== 0) return;
+          dragGalleryState.isPointerDown = true;
+          dragGalleryState.lastX = event.clientX;
+          dragGalleryState.lastY = event.clientY;
+          dragGalleryState.lastTime = performance.now();
+          dragGalleryState.vx = 0;
+          dragGalleryState.vy = 0;
+          gallery.classList.add("is-dragging");
+          gallery.setPointerCapture(event.pointerId);
+          startDragAnimation();
+        };
+
+        gallery.onpointermove = (event) => {
+          if (!dragGalleryState.isPointerDown) return;
+          const now = performance.now();
+          const elapsed = Math.max(16, now - dragGalleryState.lastTime);
+          const dx = event.clientX - dragGalleryState.lastX;
+          const dy = event.clientY - dragGalleryState.lastY;
+
+          dragGalleryState.x += dx;
+          dragGalleryState.y += dy;
+          dragGalleryState.vx = (dx / elapsed) * 16;
+          dragGalleryState.vy = (dy / elapsed) * 16;
+          dragGalleryState.lastX = event.clientX;
+          dragGalleryState.lastY = event.clientY;
+          dragGalleryState.lastTime = now;
+          wrapDragPosition();
+          applyDragTransform();
+        };
+
+        gallery.onpointerup = gallery.onpointercancel = (event) => {
+          dragGalleryState.isPointerDown = false;
+          gallery.classList.remove("is-dragging");
+          if (gallery.hasPointerCapture(event.pointerId)) {
+            gallery.releasePointerCapture(event.pointerId);
+          }
+          startDragAnimation();
+        };
+
+        gallery.onwheel = (event) => {
+          event.preventDefault();
+          const distance = event.deltaY + event.deltaX;
+          const movement = Math.max(-42, Math.min(42, distance * 0.26));
+          dragGalleryState.vx += -movement * 0.22;
+          dragGalleryState.vy += -movement * 0.22;
+          dragGalleryState.vx = Math.max(-28, Math.min(28, dragGalleryState.vx));
+          dragGalleryState.vy = Math.max(-28, Math.min(28, dragGalleryState.vy));
+          startDragAnimation();
+        };
+
+        window.onresize = () => {
+          renderDragGallery(project);
+        };
+      }
+
+      function renderProject(project) {
+        const isMoreGallery = project.layout === "more-gallery";
+        const isDragGallery = project.layout === "drag-gallery";
+
+        stopDragGallery();
+        document.title = project.title;
+        title.textContent = project.title;
+        gallery.setAttribute("aria-label", `${project.title}\u9879\u76ee\u8be6\u60c5`);
+        gallery.dataset.title = isMoreGallery ? project.title : "";
+        document.body.classList.toggle("is-more-gallery-detail", isMoreGallery);
+        document.body.classList.toggle("is-drag-gallery-detail", isDragGallery);
+        gallery.className = isDragGallery
+          ? "project-gallery drag-gallery"
+          : isMoreGallery
+            ? "project-gallery more-gallery"
+            : "project-gallery";
+        gallery.innerHTML = "";
+        gallery.onpointerdown = null;
+        gallery.onpointermove = null;
+        gallery.onpointerup = null;
+        gallery.onpointercancel = null;
+        gallery.onwheel = null;
+        window.onresize = null;
+
+        if (!project.files?.length) {
+          const empty = document.createElement("p");
+          empty.className = "detail-empty";
+          empty.textContent = "\u6682\u65e0\u8be6\u60c5\u56fe\u7247";
+          gallery.appendChild(empty);
+          return;
+        }
+
+        if (isDragGallery) {
+          renderDragGallery(project);
+          return;
+        }
+
+        project.files.forEach((file, index) => {
+          const image = document.createElement("img");
+          image.src = imageUrl(project.folder, file);
+          image.alt = `${project.title}\u5c55\u793a ${index + 1}`;
+          if (index === 0) image.fetchPriority = "high";
+          if (index > 2) image.loading = "lazy";
+
+          if (isMoreGallery) {
+            const figure = document.createElement("figure");
+            figure.className = "more-gallery-item";
+            figure.appendChild(image);
+            gallery.appendChild(figure);
+            return;
+          }
+
+          gallery.appendChild(image);
+        });
+      }
+
+      async function loadProject() {
+        try {
+          const response = await fetch(`./api/project-images?project=${encodeURIComponent(projectKey)}`, {
+            cache: "no-store",
+          });
+          if (!response.ok) throw new Error("project image api unavailable");
+          renderProject(await response.json());
+        } catch (error) {
+          renderProject({ ...fallbackProject, files: [] });
+        }
+      }
+
+      if (params.has("embed")) {
+        document.body.classList.add("is-embedded");
+      }
+
+      loadProject();
+    </script>
+  </body>
+</html>
