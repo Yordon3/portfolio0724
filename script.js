@@ -300,7 +300,7 @@ if (gdcScreen && gdcImages.length && gdcScreen.classList.contains("gdc-static"))
 
 if (gdcScreen && gdcImages.length && !gdcScreen.classList.contains("gdc-static")) {
   const gdcCollage = gdcScreen.querySelector(".gdc-collage");
-  const orbitAnchors = [
+  const desktopOrbitAnchors = [
     { x: 31.2, y: 62.8, w: 17.2, b: 0.74, z: 78, blur: 0.34 },
     { x: 39.5, y: 69.2, w: 21.8, b: 0.84, z: 98, blur: 0.22 },
     { x: 50.5, y: 73.3, w: 27.5, b: 0.96, z: 118, blur: 0.08 },
@@ -317,8 +317,19 @@ if (gdcScreen && gdcImages.length && !gdcScreen.classList.contains("gdc-static")
     { x: 31.7, y: 44.2, w: 14.1, b: 0.6, z: 58, blur: 0.54 },
     { x: 29.8, y: 54.4, w: 16.2, b: 0.69, z: 70, blur: 0.42 },
   ];
-  const orbitCount = orbitAnchors.length;
-  const orbitSpacing = orbitCount / gdcImages.length;
+  const mobileOrbitAnchors = [
+    { x: 18, y: 73, w: 40, b: 0.92, z: 110, blur: 0.04 },
+    { x: 44, y: 79, w: 54, b: 1.05, z: 142, blur: 0 },
+    { x: 74, y: 74, w: 46, b: 0.98, z: 124, blur: 0.02 },
+    { x: 104, y: 63, w: 34, b: 0.82, z: 92, blur: 0.24 },
+    { x: 95, y: 43, w: 26, b: 0.64, z: 58, blur: 0.56 },
+    { x: 72, y: 31, w: 21, b: 0.5, z: 38, blur: 0.84 },
+    { x: 48, y: 24, w: 24, b: 0.54, z: 44, blur: 0.72 },
+    { x: 25, y: 31, w: 22, b: 0.48, z: 34, blur: 0.92 },
+    { x: 4, y: 46, w: 28, b: 0.66, z: 62, blur: 0.5 },
+    { x: -8, y: 62, w: 32, b: 0.76, z: 82, blur: 0.32 },
+  ];
+  const mobileGdcQuery = window.matchMedia("(max-width: 900px)");
   const orbitSpeed = 0.13;
 
   let orbitOffset = 0;
@@ -342,13 +353,18 @@ if (gdcScreen && gdcImages.length && !gdcScreen.classList.contains("gdc-static")
     return progress * progress * (3 - 2 * progress);
   }
 
-  function slotAt(position) {
+  function getOrbitAnchors() {
+    return mobileGdcQuery.matches ? mobileOrbitAnchors : desktopOrbitAnchors;
+  }
+
+  function slotAt(position, anchors) {
+    const orbitCount = anchors.length;
     const wrapped = ((position % orbitCount) + orbitCount) % orbitCount;
     const start = Math.floor(wrapped);
     const end = (start + 1) % orbitCount;
     const progress = easeOrbit(wrapped - start);
-    const current = orbitAnchors[start];
-    const next = orbitAnchors[end];
+    const current = anchors[start];
+    const next = anchors[end];
 
     return {
       x: mixOrbit(current.x, next.x, progress),
@@ -361,8 +377,10 @@ if (gdcScreen && gdcImages.length && !gdcScreen.classList.contains("gdc-static")
   }
 
   function renderGdcOrbit() {
+    const anchors = getOrbitAnchors();
+    const orbitSpacing = anchors.length / gdcImages.length;
     gdcImages.forEach((image, index) => {
-      const slot = slotAt(index * orbitSpacing + orbitOffset);
+      const slot = slotAt(index * orbitSpacing + orbitOffset, anchors);
       const brightness = clampOrbit(slot.b, 0.34, 1.08);
 
       image.style.left = `${slot.x.toFixed(3)}%`;
@@ -406,7 +424,7 @@ if (gdcScreen && gdcImages.length && !gdcScreen.classList.contains("gdc-static")
       orbitDragDistance = Math.hypot(event.clientX - orbitStartX, event.clientY - orbitStartY);
       orbitLastX = event.clientX;
       orbitLastY = event.clientY;
-      orbitOffset += deltaX * 0.018;
+      orbitOffset += deltaX * (mobileGdcQuery.matches ? 0.014 : 0.018);
       renderGdcOrbit();
     });
 
@@ -434,6 +452,7 @@ if (gdcScreen && gdcImages.length && !gdcScreen.classList.contains("gdc-static")
   }
 
   renderGdcOrbit();
+  window.addEventListener("resize", renderGdcOrbit);
   requestAnimationFrame(animateGdcOrbit);
 }
 
@@ -522,25 +541,30 @@ const petDetailTrigger = document.querySelector(".pet-detail-trigger");
 const petDetailOverlay = document.querySelector(".pet-detail-overlay");
 const petDetailClose = document.querySelector(".pet-detail-close");
 const petDetailFrame = document.querySelector(".pet-detail-frame");
+let activeDetailTrigger = null;
 
-function openPetDetail(event) {
+function openProjectDetail(detailUrl, projectTitle, trigger = null) {
   if (!petDetailOverlay) return;
-  event?.preventDefault();
-  const trigger = event?.currentTarget;
-  const detailUrl = trigger?.getAttribute("href");
+  activeDetailTrigger = trigger;
   const isDragGalleryDetail = detailUrl?.includes("project=yinhe-city");
   petDetailOverlay.classList.toggle("is-drag-detail", Boolean(isDragGalleryDetail));
   if (detailUrl && petDetailFrame) {
     const url = new URL(detailUrl, window.location.href);
     url.searchParams.set("embed", "1");
-    url.searchParams.set("fresh", "0721-yinhe-city-smooth-wheel");
+    url.searchParams.set("fresh", "0724-yinhe-city-mobile-fix-v4");
     petDetailFrame.src = url.pathname + url.search + url.hash;
-    petDetailFrame.title = `${trigger.closest("article")?.querySelector("h3")?.textContent || "项目"}详情`;
+    petDetailFrame.title = `${projectTitle || trigger?.closest("article")?.querySelector("h3")?.textContent || "项目"}详情`;
   }
   petDetailOverlay.classList.add("is-open");
   petDetailOverlay.setAttribute("aria-hidden", "false");
   document.body.classList.add("pet-detail-open");
   petDetailClose?.focus();
+}
+
+function openPetDetail(event) {
+  event?.preventDefault();
+  const trigger = event?.currentTarget;
+  openProjectDetail(trigger?.getAttribute("href"), null, trigger);
 }
 
 function closePetDetail() {
@@ -549,13 +573,33 @@ function closePetDetail() {
   petDetailOverlay.classList.remove("is-drag-detail");
   petDetailOverlay.setAttribute("aria-hidden", "true");
   document.body.classList.remove("pet-detail-open");
-  petDetailTrigger?.focus();
+  activeDetailTrigger = null;
+  if (window.location.hash !== "#archive") window.location.hash = "archive";
 }
 
 petDetailTriggers.forEach((trigger) => trigger.addEventListener("click", openPetDetail));
 petDetailClose?.addEventListener("click", closePetDetail);
 petDetailOverlay?.addEventListener("click", (event) => {
   if (event.target === petDetailOverlay) closePetDetail();
+});
+
+const screenDetailLinks = [
+  { selector: ".gdc-screen .gdc-img", url: "./project-detail.html?project=gdc", title: "GDC设计团队LOGO" },
+  { selector: ".ip-carousel-screen .ip-carousel-slide", url: "./project-detail.html?project=yinhe", title: "银河证券IP视觉" },
+  { selector: ".season-screen .season-fallback-image, .season-screen .season-slide", url: "./project-detail.html?project=yangbo", title: "央博数字艺术馆项目" },
+  { selector: ".car-story-screen img", url: "./project-detail.html?project=chegai", title: "奔腾小马·AIGC潮改车衣设计" },
+  { selector: ".product-replica .product-img", url: "./project-detail.html?project=qingmeijiu", title: "纯发酵青梅酒包装" },
+  { selector: ".pet-replica .pet-card", url: "./project-detail.html?project=pet", title: "狗粮品牌包装" },
+];
+
+screenDetailLinks.forEach(({ selector, url, title }) => {
+  document.querySelectorAll(selector).forEach((element) => {
+    element.classList.add("screen-detail-trigger");
+    element.addEventListener("click", (event) => {
+      event.preventDefault();
+      openProjectDetail(url, title, element);
+    });
+  });
 });
 
 window.addEventListener("keydown", (event) => {

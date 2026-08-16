@@ -9,9 +9,9 @@
   </head>
   <body>
     <header class="detail-nav">
-      <a href="./index.html#archive" aria-label="Back to works">
+      <a href="./index.html#archive" aria-label="返回作品合集">
         <span aria-hidden="true">←</span>
-        Back to works
+        返回作品合集
       </a>
       <p id="projectTitle">Project Detail</p>
     </header>
@@ -20,24 +20,101 @@
 
     <footer class="detail-footer">
       <p>THANKS FOR WATCHING</p>
-      <a href="./index.html#archive">Back to works →</a>
+      <a href="./index.html#archive">返回作品合集 →</a>
     </footer>
 
     <script>
       const projects = {
-        yangbo: { title: "\u592e\u535a\u6570\u5b57\u827a\u672f\u9986\u9879\u76ee", folder: "yangbo-detail" },
-        pet: { title: "\u72d7\u7cae\u54c1\u724c\u5305\u88c5", folder: "pet-detail" },
-        poster: { title: "\u5de5\u4f5c\u6d77\u62a5\u5408\u96c6", folder: "poster-detail" },
-        gdc: { title: "GDC\u8bbe\u8ba1\u56e2\u961fLOGO", folder: "GDC-detail" },
-        qingmeijiu: { title: "\u7eaf\u53d1\u9175\u9752\u6885\u9152\u5305\u88c5", folder: "qingmeijiu-detail" },
-        yinhe: { title: "\u94f6\u6cb3\u8bc1\u5238IP\u89c6\u89c9", folder: "yinhe ip-detail" },
-        chegai: { title: "\u5954\u817e\u5c0f\u9a6c\u6f6e\u6d41\u8f66\u6539", folder: "chegai -detail" },
+        yangbo: {
+          title: "\u592e\u535a\u6570\u5b57\u827a\u672f\u9986\u9879\u76ee",
+          folder: "yangbo-detail",
+          files: [
+            "1.png", "2.png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png",
+            "9\u70b9\u58a8\u9986.png", "10\u70b9\u58a8\u9986.png", "11\u7acb\u65b9\u9986.png",
+            "12\u7acb\u65b9\u9986.png", "13\u6d41\u5149\u9986.png", "14\u6d41\u5149\u9986.png",
+            "15\u7ea2\u5c4b\u9986.png", "16\u7ea2\u5c4b\u9986.png", "17\u7409\u7483\u9986.png",
+            "18\u7409\u7483\u9986.png", "19\u9752\u82b1\u9986.png", "20\u9752\u82b1\u9986.png",
+          ],
+        },
+        pet: {
+          title: "\u72d7\u7cae\u54c1\u724c\u5305\u88c5",
+          folder: "pet-detail",
+          files: [
+            "pet-detail-01.jpg", "pet-detail-02.jpg", "pet-detail-03.jpg", "pet-detail-04.jpg",
+            "pet-detail-05.jpg", "pet-detail-06.jpg", "pet-detail-07.jpg", "pet-detail-08.jpg",
+            "pet-detail-09.jpg", "pet-detail-10.jpg", "pet-detail-11.jpg", "pet-detail-12.jpg",
+            "pet-detail-13.jpg", "pet-detail-14.jpg", "pet-detail-15.jpg", "pet-detail-16.jpg",
+            "pet-detail-17.jpg", "pet-detail-18.jpg", "pet-detail-19.jpg", "pet-detail-20.jpg",
+          ],
+        },
+        poster: {
+          title: "\u5de5\u4f5c\u6d77\u62a5\u5408\u96c6",
+          folder: "poster-detail",
+          files: [
+            "poster1.png", "poster2.png", "poster3.png", "poster4.png", "poster5.png",
+            "poster6.png", "poster7.png", "poster8.png", "poster9.png",
+          ],
+        },
+        gdc: {
+          title: "GDC\u8bbe\u8ba1\u56e2\u961fLOGO",
+          folder: "GDC-detail",
+          files: [
+            "GDC1.png", "GDC2.png", "GDC3.png", "GDC4.png", "GDC5.png", "GDC6.png",
+            "GDC7.png", "GDC10.png", "GDC11.png", "GDC12.png", "GDC13.png", "GDC14.png",
+            "GDC15.png", "GDC16.png", "GDC17.png", "GDC18.png", "GDC19.png", "GDC20.png",
+          ],
+        },
+        qingmeijiu: {
+          title: "\u7eaf\u53d1\u9175\u9752\u6885\u9152\u5305\u88c5",
+          folder: "qingmeijiu-detail",
+          files: [
+            "\u9752\u6885\u91521.png", "\u9752\u6885\u91522.png", "\u9752\u6885\u91523.png",
+            "\u9752\u6885\u91524.png", "\u9752\u6885\u91525.png", "\u9752\u6885\u91526.png",
+            "\u9752\u6885\u91527.png", "\u9752\u6885\u91528.png", "\u9752\u6885\u91529.png",
+            "\u9752\u6885\u915210.png", "\u9752\u6885\u915211.png", "\u9752\u6885\u915212.png",
+            "\u9752\u6885\u915213.png",
+          ],
+        },
+        yinhe: {
+          title: "\u94f6\u6cb3\u8bc1\u5238IP\u89c6\u89c9",
+          folder: "yinhe ip-detail",
+          files: [
+            "1 ip.png", "2 ip.png", "3 ip.png", "4 ip.png", "5 ip.png",
+            "6 ip.png", "7 ip.png", "8 ip.png", "9 ip.png", "10 ip.png",
+            "11 ip.png", "12 ip.png", "13 ip.png", "14 ip.png", "15.mp4",
+          ],
+        },
+        chegai: {
+          title: "\u5954\u817e\u5c0f\u9a6c\u00b7AIGC\u6f6e\u6539\u8f66\u8863\u8bbe\u8ba1",
+          folder: "chegai -detail",
+          files: [
+            "1 che.png", "2 che.png", "3 che.png", "4 che.png", "5 che.png",
+            "6 che.png", "7 che.png", "8 che.png", "9 che.png", "10 che.png",
+            "11 che.png", "12 che.png", "13 che.png", "14 che.png", "15 che.png",
+            "16 che.png", "17 che.png", "18 che.png", "19 che.png", "20 che.png",
+            "21 che.png", "22 che.png",
+          ],
+        },
         "yinhe-city": {
           title: "\u94f6\u6cb3\u8bc1\u5238IP\u57ce\u5e02\u7cfb\u5217",
           folder: "yinhe ip2-detail",
-          layout: "drag-gallery",
+          files: [
+            "1city.png", "2city.png", "3city.png", "4city.png", "5city.png",
+            "6city.png", "7city.png", "8city.png", "9city.png", "10city.png",
+            "11city.png", "17city.png", "18city.png", "19city.png", "20city.png",
+            "21city.png", "22city.png", "23city.png", "24city.png", "25city.png",
+            "26city.png", "27city.png", "28city.png", "29city.png", "30city.png",
+          ],
         },
-        aigc: { title: "AIGC\u5de5\u4f5c\u9879\u76ee", folder: "aigc-detail" },
+        aigc: {
+          title: "AIGC\u4e00\u952e\u751f\u6210\u7535\u5546\u89c6\u89c9\u5de5\u4f5c\u6d41",
+          folder: "aigc-detail",
+          files: [
+            "1 aigc.png", "2 AIGC.png", "2AIGC.png", "3 AIGC.png", "4 AIGC.png",
+            "4AIGC.png", "5 AIGC.png", "6 AIGC.png", "7 AIGC.png", "8 AIGC.png",
+            "8AIGC.png", "9 AIGC.png", "9AIGC.png", "10 AIGC.png", "11 AIGC.png",
+          ],
+        },
       };
 
       const params = new URLSearchParams(window.location.search);
@@ -53,6 +130,38 @@
       function imageUrl(folder, file) {
         const encodedFolder = folder.split("/").map(encodePathSegment).join("/");
         return `./assets/${encodedFolder}/${encodePathSegment(file)}`;
+      }
+
+      function isVideoFile(file) {
+        return /\.(mp4|webm|mov)$/i.test(file);
+      }
+
+      function createProjectMedia(project, file, index) {
+        const label = `${project.title}\u5c55\u793a ${index + 1}`;
+        const media = document.createElement(isVideoFile(file) ? "video" : "img");
+
+        media.src = imageUrl(project.folder, file);
+
+        if (media.tagName === "VIDEO") {
+          media.className = "project-media project-video";
+          media.setAttribute("aria-label", label);
+          media.autoplay = true;
+          media.loop = true;
+          media.muted = true;
+          media.playsInline = true;
+          media.controls = false;
+          media.preload = "auto";
+          media.disablePictureInPicture = true;
+          media.setAttribute("controlslist", "nodownload noplaybackrate noremoteplayback");
+          return media;
+        }
+
+        media.className = "project-media";
+        media.alt = label;
+        media.loading = "eager";
+        media.decoding = "async";
+        if (index === 0) media.fetchPriority = "high";
+        return media;
       }
 
       const dragGalleryState = {
@@ -133,13 +242,19 @@
       function renderDragGallery(project) {
         const track = document.createElement("div");
         const isNarrow = window.matchMedia("(max-width: 720px)").matches;
-        const rowCount = isNarrow ? 6 : 8;
-        const cellWidth = isNarrow ? 172 : 268;
-        const cellHeight = isNarrow ? 164 : 214;
-        const itemWidth = isNarrow ? 132 : 172;
-        const edgePaddingX = isNarrow ? 40 : 80;
-        const edgePaddingY = isNarrow ? 34 : 54;
-        const minimumColumns = Math.ceil(gallery.clientWidth / cellWidth) + 3;
+        const rowCount = 6;
+        const cellWidth = isNarrow
+          ? 172
+          : Math.max(230, Math.min(300, gallery.clientWidth / 5));
+        const cellHeight = isNarrow
+          ? 164
+          : Math.max(178, Math.min(250, gallery.clientHeight / 6));
+        const itemWidth = isNarrow
+          ? 132
+          : Math.min(cellWidth * 0.68, cellHeight * 0.78);
+        const edgePaddingX = cellWidth * 0.45;
+        const edgePaddingY = cellHeight * 0.22;
+        const minimumColumns = Math.ceil(gallery.clientWidth / cellWidth) + 2;
         const columnCount = Math.max(Math.ceil(project.files.length / rowCount), minimumColumns);
         const periodX = columnCount * cellWidth;
         const periodY = rowCount * cellHeight;
@@ -178,7 +293,8 @@
                 image.alt = `${project.title}\u5c55\u793a ${sourceIndex + 1}`;
                 image.draggable = false;
                 if (sourceIndex === 0 && repeatX === 0 && repeatY === 0) image.fetchPriority = "high";
-                if (sourceIndex > 5 || repeatX !== 0 || repeatY !== 0) image.loading = "lazy";
+                image.loading = repeatX === 0 && repeatY === 0 ? "eager" : "lazy";
+                image.decoding = "async";
 
                 figure.appendChild(image);
                 track.appendChild(figure);
@@ -295,34 +411,22 @@
         }
 
         project.files.forEach((file, index) => {
-          const image = document.createElement("img");
-          image.src = imageUrl(project.folder, file);
-          image.alt = `${project.title}\u5c55\u793a ${index + 1}`;
-          if (index === 0) image.fetchPriority = "high";
-          if (index > 2) image.loading = "lazy";
+          const media = createProjectMedia(project, file, index);
 
           if (isMoreGallery) {
             const figure = document.createElement("figure");
             figure.className = "more-gallery-item";
-            figure.appendChild(image);
+            figure.appendChild(media);
             gallery.appendChild(figure);
             return;
           }
 
-          gallery.appendChild(image);
+          gallery.appendChild(media);
         });
       }
 
-      async function loadProject() {
-        try {
-          const response = await fetch(`./api/project-images?project=${encodeURIComponent(projectKey)}`, {
-            cache: "no-store",
-          });
-          if (!response.ok) throw new Error("project image api unavailable");
-          renderProject(await response.json());
-        } catch (error) {
-          renderProject({ ...fallbackProject, files: [] });
-        }
+      function loadProject() {
+        renderProject(fallbackProject);
       }
 
       if (params.has("embed")) {

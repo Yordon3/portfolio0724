@@ -70,11 +70,23 @@ a {
   background: #111;
 }
 
-.project-gallery img {
+.project-gallery img,
+.project-gallery video {
   display: block;
   width: 100%;
   height: auto;
   margin: 0;
+}
+
+.project-gallery video {
+  background: #000;
+  pointer-events: none;
+}
+
+.project-gallery video::-webkit-media-controls,
+.project-gallery video::-webkit-media-controls-enclosure,
+.project-gallery video::-webkit-media-controls-panel {
+  display: none !important;
 }
 
 body.is-more-gallery-detail {
@@ -126,14 +138,16 @@ body.is-drag-gallery-detail .detail-footer {
   break-inside: avoid;
 }
 
-.more-gallery-item img {
+.more-gallery-item img,
+.more-gallery-item video {
   width: 100%;
   transition:
     transform 0.55s ease,
     filter 0.55s ease;
 }
 
-.more-gallery-item:hover img {
+.more-gallery-item:hover img,
+.more-gallery-item:hover video {
   transform: scale(1.035);
   filter: brightness(1.08);
 }
