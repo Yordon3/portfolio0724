@@ -1,10 +1,10 @@
 (() => {
   const imageSources = [
-    "assets/aigc-detail/01.png",
-    "assets/aigc-detail/02.png",
-    "assets/aigc-detail/03.png",
-    "assets/aigc-detail/04.png",
-    "assets/aigc-detail/05.png"
+    "assets/aigc-detail/01.jpg",
+    "assets/aigc-detail/02.jpg",
+    "assets/aigc-detail/03.jpg",
+    "assets/aigc-detail/04.jpg",
+    "assets/aigc-detail/05.jpg"
   ];
 
   const overlay = document.createElement("div");

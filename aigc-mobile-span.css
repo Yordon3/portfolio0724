@@ -13,7 +13,7 @@
   }
 
   #archive .archive-grid > article:nth-of-type(9) .archive-thumb-link img {
-    content: url("assets/selected-covers/aigc-mobile-wide.png");
+    content: url("assets/selected-covers/aigc-mobile-wide.jpg");
     display: block;
     width: 100%;
     height: 100%;

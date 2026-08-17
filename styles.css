@@ -56,7 +56,7 @@ video {
   opacity: 0;
 }
 
-.video-backdrop video {
+.video-backdrop img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -973,7 +973,7 @@ video {
   background-image:
     linear-gradient(180deg, rgba(0, 0, 0, 0.38), rgba(0, 0, 0, 0.24) 46%, rgba(0, 0, 0, 0.54)),
     linear-gradient(90deg, rgba(0, 0, 0, 0.42), transparent 18%, transparent 82%, rgba(0, 0, 0, 0.42)),
-    url("./assets/footer/contact-bg.png");
+    url("./assets/footer/contact-bg.jpg");
   background-size: cover;
   background-position: center;
   /* `fixed` backgrounds are unreliable on mobile browsers and can render black after deployment. */
@@ -1667,7 +1667,7 @@ body.pet-detail-open {
   min-height: 0;
   padding: 0;
   overflow: hidden;
-  background: url("./assets/screen5/flat/screen5-flat.png") center center / 100% 100% no-repeat;
+  background: url("./assets/screen5/flat/screen5-flat.jpg") center center / 100% 100% no-repeat;
 }
 
 .season-screen .poster-stage {

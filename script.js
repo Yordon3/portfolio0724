@@ -12,6 +12,7 @@ const posterImages = [...document.querySelectorAll(".poster-fan img")];
 const ipCarouselScreen = document.querySelector(".ip-carousel-screen");
 const carStoryScreen = document.querySelector(".car-story-screen");
 const seasonScreen = document.querySelector(".season-screen");
+
 window.__heroVideoFound = Boolean(heroVideo);
 
 if (seasonScreen) {
