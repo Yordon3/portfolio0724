@@ -263,7 +263,9 @@ video {
 .hero-side {
   position: absolute;
   right: 3.12vw;
-  top: 37.45vw;
+  top: auto;
+  /* Keep the full text block inside the first screen on wide/short desktops. */
+  bottom: clamp(36px, 3.12vw, 72px);
   z-index: 2;
   width: 27vw;
   color: rgba(255, 255, 255, 0.78);
@@ -296,7 +298,7 @@ video {
   padding: 1vw 1.77vw;
   border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 999px;
-  color: #fff;
+  color: var(--lime);
   font-size: 0.83vw;
   font-weight: 400;
   letter-spacing: 0.18em;
